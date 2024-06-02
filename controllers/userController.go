@@ -158,8 +158,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"token": tokenString,
-	})
+	//set jwt token as cookie
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("token", tokenString, 3600*24*30, "", "", false, false)
+	c.JSON(http.StatusOK, gin.H{})
 
+}
+
+func Validate(c *gin.Context) {
+	user, _ := c.Get("user")
+	c.JSON(http.StatusOK, gin.H{
+		"message": user,
+	})
 }
